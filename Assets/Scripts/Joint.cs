@@ -14,6 +14,7 @@ public class Joint {
     public Joint(int id, Vector3 position) {
         this.id = id;
         this.position = position;
+        this.position.z = 0;
         this.offsetMat = Matrix4x4.Translate(position).inverse;
         UpdateJointMat();
     }
@@ -26,6 +27,7 @@ public class Joint {
     // 関節位置更新
     public void UpdateJointPosition(Vector3 newPosition) {
         position = newPosition;
+        position.z = 0;
     }
 
     // jointMat更新
