@@ -7,11 +7,11 @@ public class SkeletalAnimationObject {
     public Vector3[] initialVertices; // 初期位置
     public Vector3[] vertices;
     public int[] triangles;
-    public int[][] influencialJoint; // 各頂点が影響を受ける関節
+    public int[,] influencialJoint; // 各頂点が影響を受ける関節
     public Vector3[] influenceWeight; // 各頂点が受ける影響度
     public Joint[] joints;
 
-    public SkeletalAnimationObject(Vector3[] vertices, int[] triangles, int[][] influencialJoint, Vector3[] influenceWeight, Joint[] joints) {
+    public SkeletalAnimationObject(Vector3[] vertices, int[] triangles, int[,] influencialJoint, Vector3[] influenceWeight, Joint[] joints) {
         initialVertices = new Vector3[vertices.Length];
         this.vertices = new Vector3[vertices.Length];
         vertices.CopyTo(initialVertices, 0);
@@ -38,10 +38,10 @@ public class SkeletalAnimationObject {
             float w2 = influenceWeight[i].z;
             float w3 = 1 - w0 - w1 - w2;
 
-            Matrix4x4 matrix = joints[influencialJoint[i][0]].jointMat.MultiplyScalar(w0)
-                               .Add(joints[influencialJoint[i][1]].jointMat.MultiplyScalar(w1))
-                               .Add(joints[influencialJoint[i][2]].jointMat.MultiplyScalar(w2))
-                               .Add(joints[influencialJoint[i][3]].jointMat.MultiplyScalar(w3));
+            Matrix4x4 matrix = joints[influencialJoint[i,0]].jointMat.MultiplyScalar(w0)
+                               .Add(joints[influencialJoint[i,1]].jointMat.MultiplyScalar(w1))
+                               .Add(joints[influencialJoint[i,2]].jointMat.MultiplyScalar(w2))
+                               .Add(joints[influencialJoint[i,3]].jointMat.MultiplyScalar(w3));
             vertices[i] = matrix.MultiplyPoint(vertices[i]);
         }
     }

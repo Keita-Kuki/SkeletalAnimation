@@ -5,39 +5,59 @@ using UnityEngine;
 public class JointPositionTracker : MonoBehaviour {
 
     [HideInInspector]
-    public Transform head;
+    public Transform nose;
     [HideInInspector]
     public Transform neck;
+
     [HideInInspector]
-    public Transform chest;
+    public Transform rShoulder;
     [HideInInspector]
-    public Transform rightArm;
+    public Transform rElbow;
     [HideInInspector]
-    public Transform leftArm;
+    public Transform rWrist;
+
     [HideInInspector]
-    public Transform rightHand;
+    public Transform lShoulder;
     [HideInInspector]
-    public Transform leftHand;
+    public Transform lElbow;
     [HideInInspector]
-    public Transform hip;
+    public Transform lWrist;
+
     [HideInInspector]
-    public Transform rightLeg;
+    public Transform rHip;
     [HideInInspector]
-    public Transform leftLeg;
+    public Transform rKnee;
     [HideInInspector]
-    public Transform rightFoot;
+    public Transform rAnkle;
+
     [HideInInspector]
-    public Transform leftFoot;
+    public Transform lHip;
+    [HideInInspector]
+    public Transform lKnee;
+    [HideInInspector]
+    public Transform lAnkle;
+
 
 	// Use this for initialization
 	void Start () {
-        head = transform.FindDeep("EthanHead1").transform;
+        nose = transform.FindDeep("EthanUpperLip").transform;
         neck = transform.FindDeep("EthanNeck").transform;
-        chest = transform.FindDeep("EthanSpine2").transform;
-        rightArm = transform.FindDeep("EthanRightArm").transform;
-        leftArm = transform.FindDeep("EthanLeftArm").transform;
-        rightHand = transform.FindDeep("EthanRightHand").transform;
-        leftHand = transform.FindDeep("EthanLeftHand").transform;
+
+        rShoulder = transform.FindDeep("EthanRightArm").transform;
+        rElbow = transform.FindDeep("EthanRightForeArm").transform;
+        rWrist = transform.FindDeep("EthanRightHand").transform;
+
+        lShoulder = transform.FindDeep("EthanLeftArm").transform;
+        lElbow = transform.FindDeep("EthanLeftForeArm").transform;
+        lWrist = transform.FindDeep("EthanLeftHand").transform;
+
+        rHip = transform.FindDeep("EthanRightUpLeg").transform;
+        rKnee = transform.FindDeep("EthanRightLeg").transform;
+        rAnkle = transform.FindDeep("EthanRightFoot").transform;
+
+        lHip = transform.FindDeep("EthanLeftUpLeg").transform;
+        lKnee = transform.FindDeep("EthanLeftLeg").transform;
+        lAnkle = transform.FindDeep("EthanLeftFoot").transform;
 	}
 	
 	// Update is called once per frame

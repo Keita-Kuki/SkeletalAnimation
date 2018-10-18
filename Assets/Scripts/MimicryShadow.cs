@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using UnityEngine;
 
 public class MimicryShadow : MonoBehaviour {
@@ -11,162 +13,23 @@ public class MimicryShadow : MonoBehaviour {
 
     private Mesh mesh;
     private SkeletalAnimationObject SAObject;
+    private MeshData meshData;
 
-    Vector3[] vertices = new Vector3[] {
-        new Vector3 (0.2f, 2.2f, 0),
-        new Vector3 (0.5f, 1.9f, 0),
+    Vector3[] vertices;
+    int[] triangles;
+    Vector3[] normals;
+    int[,] influencialJoint;
+    Vector3[] influenceWeight;
+    Vector3[] jointPosition;
 
-        new Vector3 (0.2f, 1.5f, 0),
-        new Vector3 (0.5f, 1.5f, 0),
-        new Vector3 (1.0f, 1.5f, 0),
-        new Vector3 (1.5f, 1.5f, 0),
-        new Vector3 (2.0f, 1.5f, 0),
-        new Vector3 (2.5f, 1.5f, 0),
-
-        new Vector3 (0.2f, 0.8f, 0),
-        new Vector3 (0.5f, 0.8f, 0),
-        new Vector3 (1.0f, 0.8f, 0),
-        new Vector3 (1.5f, 0.8f, 0),
-        new Vector3 (2.0f, 0.8f, 0),
-        new Vector3 (2.5f, 0.8f, 0),
-
-        new Vector3 (-0.2f, 2.2f, 0),
-        new Vector3 (-0.5f, 1.9f, 0),
-
-        new Vector3 (-0.2f, 1.5f, 0),
-        new Vector3 (-0.5f, 1.5f, 0),
-        new Vector3 (-1.0f, 1.5f, 0),
-        new Vector3 (-1.5f, 1.5f, 0),
-        new Vector3 (-2.0f, 1.5f, 0),
-        new Vector3 (-2.5f, 1.5f, 0),
-
-        new Vector3 (-0.2f, 0.8f, 0),
-        new Vector3 (-0.5f, 0.8f, 0),
-        new Vector3 (-1.0f, 0.8f, 0),
-        new Vector3 (-1.5f, 0.8f, 0),
-        new Vector3 (-2.0f, 0.8f, 0),
-        new Vector3 (-2.5f, 0.8f, 0),
-    };
-
-    int[] triangles = new int[] {
-        0,1,14,
-        14,1,15,
-        15,1,2,
-        15,2,16,
-        2,8,16,
-        16,8,22,
-
-        2,3,8,
-        8,3,9,
-        3,4,9,
-        9,4,10,
-        10,4,5,
-        5,11,10,
-        11,5,6,
-        11,6,12,
-        6,7,12,
-        12,7,13,
-
-        17,16,22,
-        17,22,23,
-        18,17,23,
-        18,23,24,
-        19,18,24,
-        19,24,25,
-        20,19,25,
-        20,25,26,
-        21,20,26,
-        21,26,27,
-    };
-
-    int[][] influencialJoint = new int[][] {
-        new int[4]{2, 0, 0, 0},
-        new int[4]{1, 2, 0, 0},
-
-        new int[4]{1, 0, 0, 0},
-        new int[4]{0, 3, 0, 0},
-        new int[4]{3, 0, 0, 0},
-        new int[4]{3, 4, 0, 0},
-        new int[4]{4, 0, 0, 0},
-        new int[4]{4, 0, 0, 0},
-
-        new int[4]{0, 0, 0, 0},
-        new int[4]{0, 3, 0, 0},
-        new int[4]{3, 0, 0, 0},
-        new int[4]{3, 4, 0, 0},
-        new int[4]{4, 0, 0, 0},
-        new int[4]{4, 0, 0, 0},
-
-        new int[4]{2, 0, 0, 0},
-        new int[4]{1, 2, 0, 0},
-
-        new int[4]{1, 0, 0, 0},
-        new int[4]{0, 5, 0, 0},
-        new int[4]{5, 0, 0, 0},
-        new int[4]{5, 6, 0, 0},
-        new int[4]{6, 0, 0, 0},
-        new int[4]{6, 0, 0, 0},
-
-        new int[4]{0, 0, 0, 0},
-        new int[4]{0, 5, 0, 0},
-        new int[4]{5, 0, 0, 0},
-        new int[4]{5, 6, 0, 0},
-        new int[4]{6, 0, 0, 0},
-        new int[4]{6, 0, 0, 0},
-
-    };
-
-    Vector3[] influenceWeight = new Vector3[]{
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(0.50f, 0.50f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    new Vector3(1.00f, 0.00f, 0.00f),
-    };
-
-    Vector3[] jointPosition = new Vector3[]{
-        new Vector3(0, 1, 0),
-        new Vector3(0, 1.5f, 0),
-        new Vector3(0, 2, 0),
-        new Vector3(1, 1, 0),
-        new Vector3(2, 1, 0),
-        new Vector3(-1, 1, 0),
-        new Vector3(-2, 1, 0),
-    };
-
-    int jointNum = 7;
+    int jointNum = 14;
     Joint[] joints;
 
 	void Start () {
         JPTracker = animateObject.GetComponent<JointPositionTracker>();
+        meshData = GetComponent<MeshData>();
+
+        initMeshData();
 
         InitJoints();
         SetJointParent();
@@ -176,7 +39,8 @@ public class MimicryShadow : MonoBehaviour {
         mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        mesh.RecalculateNormals();
+        mesh.normals = normals;
+        //mesh.RecalculateNormals();
 
         var filter = GetComponent<MeshFilter>();
         filter.sharedMesh = mesh;
@@ -193,11 +57,39 @@ public class MimicryShadow : MonoBehaviour {
     private void OnDrawGizmos()
     {
         foreach(Joint joint in joints) {
-            Gizmos.DrawSphere(joint.position, 0.1f);
+            Gizmos.DrawSphere(joint.position, 10f);
         }
-        //foreach(Vector3 p in jointPosition) {
-        //    Gizmos.DrawSphere(p, 0.1f);
-        //}
+    }
+
+    void initMeshData() {
+        vertices = meshData.vertices;
+        triangles = Enumerable.Range(0, vertices.Length).ToArray();
+        normals = new Vector3[vertices.Length];
+        jointPosition = meshData.jointPosition;
+        influencialJoint = new int[vertices.Length,4];
+        influenceWeight = new Vector3[vertices.Length];
+        for (int i = 0; i < vertices.Length; i++) {
+            normals[i] = new Vector3(0, 0, 1);
+            Vector3 v = vertices[i];
+            float[] dists = new float[jointPosition.Length]; //関節からの距離
+            int[] idx = new int[jointPosition.Length];
+            for (int j = 0; j < jointPosition.Length; j++) {
+                dists[j] = Vector3.Distance(v, jointPosition[j]);
+                idx[j] = j;
+            }
+            Array.Sort(dists, idx);
+            //influencialJoint[i,0] = idx[0];
+            //influencialJoint[i,1] = idx[1];
+            //influencialJoint[i,2] = 0;
+            //influencialJoint[i,3] = 0;
+            //float s = dists[0] + dists[1];
+            //influenceWeight[i] = new Vector3(dists[1]/s, dists[0]/s, 0);
+            influencialJoint[i, 0] = idx[0];
+            influencialJoint[i, 1] = 0;
+            influencialJoint[i, 2] = 0;
+            influencialJoint[i, 3] = 0;
+            influenceWeight[i] = new Vector3(1, 0, 0);
+        }
     }
 
     void InitJoints()
@@ -211,21 +103,43 @@ public class MimicryShadow : MonoBehaviour {
 
     void SetJointParent()
     {
-        joints[1].SetParentJoint(joints[0]);
+        joints[0].SetParentJoint(joints[1]);
         joints[2].SetParentJoint(joints[1]);
+        joints[5].SetParentJoint(joints[1]);
+        joints[8].SetParentJoint(joints[1]);
+        joints[11].SetParentJoint(joints[1]);
+
+        joints[3].SetParentJoint(joints[2]);
         joints[4].SetParentJoint(joints[3]);
+
         joints[6].SetParentJoint(joints[5]);
-        joints[3].SetParentJoint(joints[1]);
-        joints[5].SetParentJoint(joints[3]);
+        joints[7].SetParentJoint(joints[6]);
+
+        joints[9].SetParentJoint(joints[8]);
+        joints[10].SetParentJoint(joints[9]);
+
+        joints[12].SetParentJoint(joints[11]);
+        joints[13].SetParentJoint(joints[12]);
     }
 
     void UpdateJointsPosition() {
-        joints[0].UpdateJointPosition(JPTracker.chest.position);
+        joints[0].UpdateJointPosition(JPTracker.nose.position);
         joints[1].UpdateJointPosition(JPTracker.neck.position);
-        joints[2].UpdateJointPosition(JPTracker.head.position);
-        joints[3].UpdateJointPosition(JPTracker.rightArm.position);
-        joints[4].UpdateJointPosition(JPTracker.rightHand.position);
-        joints[5].UpdateJointPosition(JPTracker.leftArm.position);
-        joints[6].UpdateJointPosition(JPTracker.leftHand.position);
+
+        joints[2].UpdateJointPosition(JPTracker.rShoulder.position);
+        joints[3].UpdateJointPosition(JPTracker.rElbow.position);
+        joints[4].UpdateJointPosition(JPTracker.rWrist.position);
+
+        joints[5].UpdateJointPosition(JPTracker.lShoulder.position);
+        joints[6].UpdateJointPosition(JPTracker.lElbow.position);
+        joints[7].UpdateJointPosition(JPTracker.lWrist.position);
+
+        joints[8].UpdateJointPosition(JPTracker.rHip.position);
+        joints[9].UpdateJointPosition(JPTracker.rKnee.position);
+        joints[10].UpdateJointPosition(JPTracker.rAnkle.position);
+
+        joints[11].UpdateJointPosition(JPTracker.lHip.position);
+        joints[12].UpdateJointPosition(JPTracker.lKnee.position);
+        joints[13].UpdateJointPosition(JPTracker.lAnkle.position);
     }
 }
