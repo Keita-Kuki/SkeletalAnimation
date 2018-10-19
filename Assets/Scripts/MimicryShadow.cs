@@ -57,7 +57,10 @@ public class MimicryShadow : MonoBehaviour {
     private void OnDrawGizmos()
     {
         foreach(Joint joint in joints) {
-            Gizmos.DrawSphere(joint.position, 10f);
+            Gizmos.DrawCube(joint.position, new Vector3(5, 5, 5));
+        }
+        foreach(Vector3 v in mesh.vertices) {
+            Gizmos.DrawSphere(v, 1f);
         }
     }
 
@@ -123,23 +126,49 @@ public class MimicryShadow : MonoBehaviour {
     }
 
     void UpdateJointsPosition() {
-        joints[0].UpdateJointPosition(JPTracker.nose.position);
-        joints[1].UpdateJointPosition(JPTracker.neck.position);
+        // TODO: 後ろ向いてるかどうかで場合分け
+        float forward_z = animateObject.transform.forward.z;
+        if (forward_z > 0)
+        {
+            joints[0].UpdateJointPosition(JPTracker.nose.position);
+            joints[1].UpdateJointPosition(JPTracker.neck.position);
 
-        joints[2].UpdateJointPosition(JPTracker.rShoulder.position);
-        joints[3].UpdateJointPosition(JPTracker.rElbow.position);
-        joints[4].UpdateJointPosition(JPTracker.rWrist.position);
+            joints[2].UpdateJointPosition(JPTracker.rShoulder.position);
+            joints[3].UpdateJointPosition(JPTracker.rElbow.position);
+            joints[4].UpdateJointPosition(JPTracker.rWrist.position);
 
-        joints[5].UpdateJointPosition(JPTracker.lShoulder.position);
-        joints[6].UpdateJointPosition(JPTracker.lElbow.position);
-        joints[7].UpdateJointPosition(JPTracker.lWrist.position);
+            joints[5].UpdateJointPosition(JPTracker.lShoulder.position);
+            joints[6].UpdateJointPosition(JPTracker.lElbow.position);
+            joints[7].UpdateJointPosition(JPTracker.lWrist.position);
 
-        joints[8].UpdateJointPosition(JPTracker.rHip.position);
-        joints[9].UpdateJointPosition(JPTracker.rKnee.position);
-        joints[10].UpdateJointPosition(JPTracker.rAnkle.position);
+            joints[8].UpdateJointPosition(JPTracker.rHip.position);
+            joints[9].UpdateJointPosition(JPTracker.rKnee.position);
+            joints[10].UpdateJointPosition(JPTracker.rAnkle.position);
 
-        joints[11].UpdateJointPosition(JPTracker.lHip.position);
-        joints[12].UpdateJointPosition(JPTracker.lKnee.position);
-        joints[13].UpdateJointPosition(JPTracker.lAnkle.position);
+            joints[11].UpdateJointPosition(JPTracker.lHip.position);
+            joints[12].UpdateJointPosition(JPTracker.lKnee.position);
+            joints[13].UpdateJointPosition(JPTracker.lAnkle.position);
+        }
+        else
+        {
+            joints[0].UpdateJointPosition(JPTracker.nose.position);
+            joints[1].UpdateJointPosition(JPTracker.neck.position);
+
+            joints[2].UpdateJointPosition(JPTracker.lShoulder.position);
+            joints[3].UpdateJointPosition(JPTracker.lElbow.position);
+            joints[4].UpdateJointPosition(JPTracker.lWrist.position);
+
+            joints[5].UpdateJointPosition(JPTracker.rShoulder.position);
+            joints[6].UpdateJointPosition(JPTracker.rElbow.position);
+            joints[7].UpdateJointPosition(JPTracker.rWrist.position);
+
+            joints[8].UpdateJointPosition(JPTracker.lHip.position);
+            joints[9].UpdateJointPosition(JPTracker.lKnee.position);
+            joints[10].UpdateJointPosition(JPTracker.lAnkle.position);
+
+            joints[11].UpdateJointPosition(JPTracker.rHip.position);
+            joints[12].UpdateJointPosition(JPTracker.rKnee.position);
+            joints[13].UpdateJointPosition(JPTracker.rAnkle.position);
+        }
     }
 }

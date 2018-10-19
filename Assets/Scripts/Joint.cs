@@ -26,8 +26,8 @@ public class Joint {
 
     // 関節位置更新
     public void UpdateJointPosition(Vector3 newPosition) {
+        newPosition.z = 0;
         position = newPosition;
-        position.z = 0;
     }
 
     // jointMat更新
